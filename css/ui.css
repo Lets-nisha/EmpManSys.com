@@ -1,0 +1,97 @@
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+
+  body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #f8fafc;
+  }
+
+  .sidebar-link {
+      transition: all 0.2s;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      font-weight: 600;
+      color: #94a3b8;
+  }
+
+  .sidebar-link:hover {
+      background: #1e293b;
+      color: white;
+  }
+
+  .active-link {
+      background: #0d9488 !important;
+      color: white !important;
+  }
+
+  .status-present {
+      color: #10b981;
+      font-weight: 800;
+  }
+
+  .status-absent {
+      color: #ef4444;
+      font-weight: 800;
+  }
+
+  .status-sick {
+      color: #f59e0b;
+      font-weight: 800;
+  }
+
+  .status-leave {
+      color: #8b5cf6;
+      font-weight: 800;
+  }
+
+  .status-pending {
+      background: #f1f5f9;
+      color: #64748b;
+      padding: 4px 12px;
+      rounded: 8px;
+  }
+
+  .status-approved {
+      background: #ecfdf5;
+      color: #10b981;
+      padding: 4px 12px;
+      rounded: 8px;
+  }
+
+  .report-card {
+      background: white;
+      border-radius: 24px;
+      border: 1px solid #e2e8f0;
+      overflow: hidden;
+      transition: 0.3s;
+  }
+
+  .report-card:hover {
+      border-color: #0d9488;
+      transform: translateY(-2px);
+  }
+
+  @media print {
+      body * {
+          visibility: hidden;
+      }
+
+      #slip-print-section,
+      #slip-print-section * {
+          visibility: visible;
+      }
+
+      #slip-print-section {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+      }
+
+      .no-print {
+          display: none !important;
+      }
+  }
+
+  

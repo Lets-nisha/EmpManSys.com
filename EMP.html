@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emp-Man-Sys</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="./css/ui.css">
+</head>
+
+<body class="text-slate-900 bg-slate-50">
+
+    <div id="login-page" class="fixed inset-0 bg-slate-950 flex items-center justify-center z-[1000] p-4">
+        <div class="bg-white p-6 md:p-10 rounded-[2.5rem] w-full max-w-md shadow-2xl text-center">
+            <h1 class="text-2xl md:text-3xl font-black text-teal-600 mb-8 italic">ADMIN LOGIN</h1>
+            <input type="password" id="p" placeholder="Enter PIN (123)"
+                class="w-full p-4 bg-slate-50 border rounded-2xl mb-6 outline-none text-center font-bold focus:ring-2 focus:ring-teal-500">
+            <button onclick="doLogin()"
+                class="w-full bg-teal-600 text-white p-4 rounded-2xl font-black shadow-lg hover:bg-teal-700 transition-all">LOGIN</button>
+        </div>
+    </div>
+
+    <div id="app" class="flex min-h-screen hidden">
+
+        <aside id="sidebar"
+            class="w-72 fixed lg:sticky top-0 h-screen bg-[#0f172a] p-6 space-y-2 z-[100] no-print transition-transform duration-300 ease-in-out -translate-x-full lg:translate-x-0 border-r border-slate-800">
+            <div class="flex justify-between items-center mb-10 px-4">
+                <h2 class="text-2xl font-black italic text-teal-400 org-name-display">EMS</h2>
+                <button class="lg:hidden text-white hover:scale-110 transition-transform"
+                    onclick="document.getElementById('sidebar').classList.add('-translate-x-full')">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <nav class="space-y-1 ">
+                <button onclick="go('dash')" id="m-dash" class="sidebar-link w-full active-link"><i
+                        class="fas fa-chart-pie mr-3"></i> Dashboard</button>
+                <button onclick="go('emp')" id="m-emp" class="sidebar-link w-full"><i class="fas fa-users mr-3"></i>
+                    Staff</button>
+                <button onclick="go('dept')" id="m-dept" class="sidebar-link w-full"><i class="fas fa-sitemap mr-3"></i>
+                    Departments</button>
+                <button onclick="go('leave')" id="m-leave" class="sidebar-link w-full"><i
+                        class="fas fa-calendar-minus mr-3"></i> Leaves</button>
+                <button onclick="go('att')" id="m-att" class="sidebar-link w-full"><i
+                        class="fas fa-fingerprint mr-3"></i> Attendance</button>
+                <button onclick="go('rep')" id="m-rep" class="sidebar-link w-full"><i
+                        class="fas fa-file-contract mr-3"></i>Attendance Reports</button>
+                <button onclick="go('sal')" id="m-sal" class="sidebar-link w-full"><i class="fas fa-wallet mr-3"></i>
+                    Salary</button>
+                <button onclick="go('set')" id="m-set" class="sidebar-link w-full"><i class="fas fa-cog mr-3"></i>
+                    Settings</button>
+            </nav>
+        </aside>
+
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-[90] hidden lg:hidden"
+            onclick="document.getElementById('sidebar').classList.add('-translate-x-full'); this.classList.add('hidden')">
+        </div>
+``
+        <main class="flex-1 flex flex-col min-w-0 no-print">
+            <header class="bg-white border-b p-4 md:p-6 flex justify-between items-center sticky top-0 z-50">
+                <div class="flex items-center gap-4">
+                    <button class="lg:hidden text-slate-600 p-2 hover:bg-slate-100 rounded-xl transition-colors"
+                        onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <h2 id="title" class="text-lg md:text-xl font-black text-slate-700 uppercase tracking-tighter">
+                        Dashboard</h2>
+                </div>
+                <button onclick="logout()"
+                    class="bg-red-50 text-red-600 px-4 py-2 rounded-xl font-bold text-sm">Logout</button>
+            </header>
+
+            <div class="p-4 md:p-6 lg:p-10">
+                <div id="view-dash" class="space-y-8">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                        <div class="bg-white p-6 rounded-3xl border shadow-sm flex items-center gap-4">
+                            <div class="p-4 bg-teal-50 rounded-2xl text-teal-600"><i class="fas fa-users text-2xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-black uppercase text-slate-400">Total Staff</p>
+                                <h3 id="stat-s" class="text-2xl font-black">0</h3>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-3xl border shadow-sm flex items-center gap-4">
+                            <div class="p-4 bg-purple-50 rounded-2xl text-purple-600"><i
+                                    class="fas fa-calendar-day text-2xl"></i></div>
+                            <div>
+                                <p class="text-[10px] font-black uppercase text-slate-400">Leaves Today</p>
+                                <h3 id="stat-l" class="text-2xl font-black">0</h3>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-3xl border shadow-sm flex items-center gap-4 sm:col-span-2">
+                            <div class="p-4 bg-emerald-50 rounded-2xl text-emerald-600"><i
+                                    class="fas fa-coins text-2xl"></i></div>
+                            <div>
+                                <p class="text-[10px] font-black uppercase text-slate-400">Estimated Payroll</p>
+                                <h3 id="stat-b" class="text-2xl font-black">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="bg-white p-4 md:p-8 rounded-[2rem] border shadow-sm h-[300px] md:h-[320px]"><canvas
+                                id="c1"></canvas></div>
+                        <div class="bg-white p-4 md:p-8 rounded-[2rem] border shadow-sm h-[300px] md:h-[320px]"><canvas
+                                id="c2"></canvas></div>
+                    </div>
+                </div>
+
+                <div id="view-emp" class="hidden space-y-6">
+                    <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                        <input type="text" id="emp-search" oninput="render()" placeholder="Search employee..."
+                            class="w-full md:max-w-md p-4 bg-white border rounded-2xl font-bold outline-none shadow-sm">
+                        <button onclick="showEmpMod()"
+                            class="w-full md:w-auto bg-teal-600 text-white px-8 py-4 rounded-2xl font-black shadow-lg">Add
+                            Staff</button>
+                    </div>
+                    <div id="dept-tabs-container" class="flex gap-2 overflow-x-auto pb-2 no-scrollbar"></div>
+                    <div class="bg-white rounded-[2rem] border shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left min-w-[600px]">
+                                <thead class="bg-slate-50 text-[10px] font-black uppercase text-slate-400 border-b">
+                                    <tr>
+                                        <th class="p-6">Employee</th>
+                                        <th class="p-6">Dept</th>
+                                        <th class="p-6">Salary</th>
+                                        <th class="p-6 text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="emp-list" class="divide-y divide-slate-50"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-dept" class="hidden space-y-6">
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <input type="text" id="new-dept-name" placeholder="Department Name..."
+                            class="flex-1 p-4 border rounded-2xl font-bold outline-none">
+                        <button onclick="saveDept()"
+                            class="bg-teal-600 text-white px-8 py-4 rounded-2xl font-black">Add</button>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6" id="dept-list"></div>
+                </div>
+
+                <div id="view-leave" class="hidden space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xl font-black">Leave Management</h3>
+                        <button onclick="showLeaveMod()"
+                            class="bg-teal-600 text-white px-6 py-3 rounded-2xl font-black shadow-md">New
+                            Request</button>
+                    </div>
+                    <div class="bg-white rounded-[2rem] border shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left min-w-[600px]">
+                                <thead class="bg-slate-50 text-[10px] font-black uppercase text-slate-400 border-b">
+                                    <tr>
+                                        <th class="p-6">Staff</th>
+                                        <th class="p-6">Reason</th>
+                                        <th class="p-6 text-center">Status</th>
+                                        <th class="p-6 text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="leave-list" class="divide-y"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-rep" class="hidden space-y-8">
+                    <div
+                        class="flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-[2rem] border shadow-sm gap-4">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-calendar-alt text-teal-600 text-xl"></i>
+                            <input type="date" id="rep-date" onchange="drawRep()"
+                                class="p-3 bg-slate-50 border-none rounded-xl font-bold outline-none">
+                        </div>
+                        <div class="text-center md:text-right">
+                            <p class="text-[10px] font-black text-slate-400 uppercase">System Intelligence</p>
+                            <h3 class="font-black text-teal-600 italic">Daily Activity Report</h3>
+                        </div>
+                    </div>
+                    <div id="rep-data-container" class="grid grid-cols-1 gap-6"></div>
+                </div>
+
+                <div id="view-att" class="hidden space-y-6">
+                    <div class="bg-white rounded-[2rem] border shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left min-w-[500px]">
+                                <thead class="bg-slate-50 text-[10px] font-black uppercase text-slate-400 border-b">
+                                    <tr>
+                                        <th class="p-6">Staff Name</th>
+                                        <th class="p-6">ID</th>
+                                        <th class="p-6 text-center">Status / Mark</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="att-mark-list" class="divide-y"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-sal" class="hidden space-y-6">
+                    <div class="bg-white rounded-[2rem] border shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left min-w-[600px]">
+                                <thead class="bg-slate-50 text-[10px] font-black uppercase text-slate-400 border-b">
+                                    <tr>
+                                        <th class="p-6">Employee</th>
+                                        <th class="p-6">Base Pay</th>
+                                        <th class="p-6 text-red-500">Deductions</th>
+                                        <th class="p-6 text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sal-list" class="divide-y"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-set" class="hidden">
+                    <div class="max-w-xl mx-auto bg-white p-6 md:p-10 rounded-[2.5rem] border shadow-sm">
+                        <h3 class="text-xl font-black mb-8 border-b pb-4">Branding & System</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <label class="text-[10px] font-black text-slate-400 uppercase">Company Name</label>
+                                <input type="text" id="set-org"
+                                    class="w-full p-4 bg-slate-50 border rounded-2xl font-bold mt-2 outline-none">
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-[10px] font-black text-slate-400 uppercase">Currency
+                                        Symbol</label>
+                                    <input type="text" id="set-cur"
+                                        class="w-full p-4 bg-slate-50 border rounded-2xl font-bold mt-2 outline-none">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-black text-slate-400 uppercase">Tax ID / GST</label>
+                                    <input type="text" value="REG-990022"
+                                        class="w-full p-4 bg-slate-50 border rounded-2xl font-bold mt-2 outline-none">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black text-slate-400 uppercase">Official Address</label>
+                                <textarea id="set-addr"
+                                    class="w-full p-4 bg-slate-50 border rounded-2xl font-bold mt-2 outline-none h-24"></textarea>
+                            </div>
+                            <button onclick="saveSettings()"
+                                class="w-full bg-teal-600 text-white p-5 rounded-[1.5rem] font-black shadow-lg">SAVE
+                                CONFIGURATION</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div id="mod-emp"
+            class="fixed inset-0 bg-slate-900/60 hidden flex items-center justify-center z-[100] backdrop-blur-sm p-4">
+            <div class="bg-white p-6 md:p-10 rounded-[2.5rem] w-full max-w-md shadow-2xl">
+                <h3 class="text-2xl font-black mb-6">Staff Information</h3>
+                <input type="hidden" id="f-id">
+                <div class="space-y-4">
+                    <input type="text" id="f-n" placeholder="Full Name"
+                        class="w-full p-4 bg-slate-50 rounded-2xl border font-bold outline-none">
+                    <select id="f-d" class="w-full p-4 bg-slate-50 rounded-2xl border font-bold outline-none"></select>
+                    <input type="number" id="f-s" placeholder="Monthly Salary"
+                        class="w-full p-4 bg-slate-50 rounded-2xl border font-bold outline-none">
+                    <div class="flex gap-4 pt-2">
+                        <button onclick="document.getElementById('mod-emp').classList.add('hidden')"
+                            class="flex-1 font-bold text-slate-400">Cancel</button>
+                        <button onclick="saveEmp()"
+                            class="flex-1 bg-teal-600 text-white p-4 rounded-2xl font-black">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="mod-leave"
+            class="fixed inset-0 bg-slate-900/60 hidden flex items-center justify-center z-[100] backdrop-blur-sm p-4">
+            <div class="bg-white p-8 md:p-10 rounded-[2.5rem] w-full max-w-md">
+                <h3 class="text-2xl font-black mb-6">Leave Application</h3>
+                <div class="space-y-4">
+                    <select id="l-emp"
+                        class="w-full p-4 bg-slate-50 rounded-2xl border font-bold outline-none"></select>
+                    <input type="text" id="l-reason" placeholder="Reason..."
+                        class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none">
+                    <input type="date" id="l-date"
+                        class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none">
+                    <button onclick="saveLeave()"
+                        class="w-full bg-purple-600 text-white p-4 rounded-2xl font-black mt-4 shadow-lg">Submit
+                        Request</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mod-att"
+            class="fixed inset-0 bg-slate-900/60 hidden flex items-center justify-center z-[100] p-4 backdrop-blur-sm">
+            <div class="bg-white p-8 rounded-[2.5rem] w-full max-w-sm text-center">
+                <h4 class="text-xl font-black mb-6 uppercase tracking-widest text-slate-400">Punch Status</h4>
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="mark('present')"
+                        class="bg-emerald-500 text-white p-4 rounded-3xl font-black shadow-lg">Present</button>
+                    <button onclick="mark('absent')"
+                        class="bg-red-500 text-white p-4 rounded-3xl font-black shadow-lg">Absent</button>
+                    <button onclick="mark('sick')"
+                        class="bg-amber-500 text-white p-4 rounded-3xl font-black shadow-lg">Sick</button>
+                    <button onclick="mark('leave')"
+                        class="bg-purple-500 text-white p-4 rounded-3xl font-black shadow-lg">Leave</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="./js/app.js"></script>
+
+</body>
+
+</html>
