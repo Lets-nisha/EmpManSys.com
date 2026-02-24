@@ -72,26 +72,4 @@
       transform: translateY(-2px);
   }
 
-  @media print {
-      body * {
-          visibility: hidden;
-      }
-
-      #slip-print-section,
-      #slip-print-section * {
-          visibility: visible;
-      }
-
-      #slip-print-section {
-          position: absolute;
-          left: 0;
-          top: 0;
-          width: 100%;
-      }
-
-      .no-print {
-          display: none !important;
-      }
-  }
-
-  
+ 
