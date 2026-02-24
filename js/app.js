@@ -1,3 +1,4 @@
+// --- Updated Code niche se copy karein ---
 
 let db = JSON.parse(localStorage.getItem("ems_db")) || {
   e: [],
@@ -6,9 +7,9 @@ let db = JSON.parse(localStorage.getItem("ems_db")) || {
   a: [],
 };
 let config = JSON.parse(localStorage.getItem("ems_config")) || {
-  org: "A1 LOGISTICS",
+  org: "A1 EMS",
   cur: "₹",
-  addr: "Main City Hub, Sector 12, Delhi",
+  addr: "Main City Hub, Sector 12, Rampur, UP",
 };
 let selId = null;
 let ch1, ch2;
@@ -132,51 +133,56 @@ function saveDept() {
   }
 }
 
+// FIXED: Ab ye function pehle dikhayega (Print nahi karega seedha)
+// ... (Puraane functions waise hi rahenge) ...
+
 function printSlip(id) {
-  const e = db.e.find((x) => x.id === id);
-  const m = new Date().getMonth();
-  const y = new Date().getFullYear();
+    const e = db.e.find((x) => x.id === id);
+    if(!e) return;
+    
+    const m = new Date().getMonth();
+    const y = new Date().getFullYear();
 
-  // Automatic Calculation Logic
-  const leaves = db.l.filter(
-    (l) =>
-      l.eid === id &&
-      l.status === "approved" &&
-      new Date(l.date).getMonth() === m &&
-      new Date(l.date).getFullYear() === y,
-  ).length;
-  const absents = db.a.filter(
-    (a) =>
-      a.id === id &&
-      a.status === "absent" &&
-      new Date(a.date).getMonth() === m &&
-      new Date(a.date).getFullYear() === y,
-  ).length;
+    // Calculation Logic
+    const leaves = db.l.filter(l => l.eid === id && l.status === "approved" && new Date(l.date).getMonth() === m).length;
+    const absents = db.a.filter(a => a.id === id && a.status === "absent" && new Date(a.date).getMonth() === m).length;
 
-  const l_ded = leaves > 2 ? (leaves - 2) * 500 : 0;
-  const a_ded = absents * 1000;
-  const net = e.salary - l_ded - a_ded;
+    const l_ded = leaves > 2 ? (leaves - 2) * 500 : 0;
+    const a_ded = absents * 1000;
+    const net = e.salary - l_ded - a_ded;
 
-  document.getElementById("print-name").innerText = e.name;
-  document.getElementById("print-id").innerText = e.empID;
-  document.getElementById("print-addr-display").innerText = config.addr;
-  document.getElementById("print-month-year").innerText =
-    new Date().toLocaleString("default", { month: "long", year: "numeric" });
-  document.getElementById("print-basic").innerText =
-    config.cur + e.salary.toLocaleString();
-  document.getElementById("print-l-ded").innerText =
-    "- " + config.cur + l_ded.toLocaleString();
-  document.getElementById("print-a-ded").innerText =
-    "- " + config.cur + a_ded.toLocaleString();
-  document.getElementById("print-net").innerText =
-    config.cur + net.toLocaleString();
-  document.getElementById("print-deduction-summary").innerText =
-    `L: ${leaves} | A: ${absents}`;
+    // HTML Elements mein data bharna
+    document.getElementById("print-name").innerText = e.name;
+    document.getElementById("print-id").innerText = e.empID;
+    document.getElementById("print-addr-display").innerText = config.addr;
+    document.getElementById("print-month-year").innerText = new Date().toLocaleString("default", { month: "long", year: "numeric" });
+    document.getElementById("print-basic").innerText = config.cur + e.salary.toLocaleString();
+    document.getElementById("print-l-ded").innerText = "- " + config.cur + l_ded.toLocaleString();
+    document.getElementById("print-a-ded").innerText = "- " + config.cur + a_ded.toLocaleString();
+    document.getElementById("print-net").innerText = config.cur + net.toLocaleString();
+    document.getElementById("print-deduction-summary").innerText = `L: ${leaves} | A: ${absents}`;
+    document.getElementById("current-date").innerText = new Date().toLocaleDateString();
 
-  document.getElementById("slip-print-section").classList.remove("hidden");
-  window.print();
-  document.getElementById("slip-print-section").classList.add("hidden");
+    // Modal Show Karna (Print Preview)
+    document.getElementById("slip-print-section").classList.remove("hidden");
+
+     
 }
+
+function Print() {
+  
+    const printSection = document.getElementById('slip-print-section');
+    
+    // 1. Pehle section se 'hidden' class hatao
+    printSection.classList.remove('hidden');
+    
+    // 2. Thoda delay do taaki browser render kar le
+    setTimeout(() => {
+        window.print();
+    }, 500);
+}
+
+// ... (Baaki render aur mark functions waise hi rahenge) ...
 
 function openMark(id) {
   selId = id;
@@ -284,7 +290,6 @@ function render() {
     }
   });
 
-  // UPDATED LEAVE SECTION
   db.l.forEach((l) => {
     const emp = db.e.find((x) => x.id === l.eid);
     if (l.date === today && l.status === "approved") lToday++;
@@ -377,7 +382,3 @@ function logout() {
   sessionStorage.removeItem("auth");
   location.reload();
 }
-
-
-
-
