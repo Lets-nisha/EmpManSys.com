@@ -201,23 +201,104 @@
                     </div>
                 </div>
 
-                <div id="view-sal" class="hidden space-y-6">
-                    <div class="bg-white rounded-[2rem] border shadow-sm overflow-hidden">
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left min-w-[600px]">
-                                <thead class="bg-slate-50 text-[10px] font-black uppercase text-slate-400 border-b">
-                                    <tr>
-                                        <th class="p-6">Employee</th>
-                                        <th class="p-6">Base Pay</th>
-                                        <th class="p-6 text-red-500">Deductions</th>
-                                        <th class="p-6 text-center">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="sal-list" class="divide-y"></tbody>
-                            </table>
-                        </div>
-                    </div>
+   <div id="view-sal" class="hidden space-y-6 no-print">
+    <div class="bg-white rounded-[2rem] border shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left min-w-[600px]">
+                <thead class="bg-slate-50 text-[10px] font-black uppercase text-slate-400 border-b">
+                    <tr>
+                        <th class="p-6">Employee</th>
+                        <th class="p-6">Base Pay</th>
+                        <th class="p-6 text-red-500">Deductions</th>
+                        <th class="p-6 text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="sal-list" class="divide-y"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="slip-print-section" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[9999] p-4 overflow-auto flex justify-center items-start no-print-overlay">
+    <div id="a4-paper" class="bg-white shadow-2xl relative my-10 print:my-0 print:shadow-none" style="width: 21cm; min-height: 29.7cm; padding: 2cm;">
+        
+        <div class="no-print absolute -top-12 right-0 flex  gap-5">
+            <button onclick="print()" class=" text-white px-8 py-2   font-black shadow-xl hover:scale-105 active:scale-95 transition-all">
+                <i class="fas fa-print mr-2"></i>
+            </button>
+            <button onclick="document.getElementById('slip-print-section').classList.add('hidden')" class="  text-white  py-2 font-bold transition-all">
+                <i class="fas fa-times mr-2"></i>
+            </button>
+        </div>
+
+        <div class="text-center border-b-2 border-slate-900 pb-8 mb-10">
+            <h1 class="org-name-display text-4xl font-black text-slate-900 uppercase tracking-tighter mb-2">EMS</h1>
+            <p id="print-addr-display" class="text-sm font-bold text-slate-500 uppercase tracking-widest"></p>
+            <div class="mt-6 inline-block bg-slate-900 text-white px-8 py-1 text-xs font-black tracking-[0.3em]">OFFICIAL PAYSLIP</div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-10 mb-12">
+            <div class="space-y-4">
+                <div>
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Employee Details</label>
+                    <p id="print-name" class="text-2xl font-black text-slate-900 leading-none mt-1"></p>
+                    <p class="text-sm text-slate-500 font-bold mt-2">ID: <span id="print-id" class="text-teal-600 font-black"></span></p>
                 </div>
+            </div>
+            <div class="text-right space-y-4">
+                <div>
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Payment Period</label>
+                    <p id="print-month-year" class="text-2xl font-black text-slate-900 mt-1"></p>
+                    <p class="text-sm text-slate-500 font-bold mt-2">Date: <span class="text-slate-900 underline underline-offset-4 font-black tracking-tighter" id="current-date"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-2 border-slate-900 rounded-lg overflow-hidden">
+            <div class="grid grid-cols-2 bg-slate-900 text-white p-4 font-black text-xs uppercase tracking-widest">
+                <span>Description</span>
+                <span class="text-right">Amount</span>
+            </div>
+            <div class="p-6 space-y-6">
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-600 font-bold uppercase text-xs tracking-wider">Gross Basic Salary</span>
+                    <span id="print-basic" class="text-xl font-black text-slate-900"></span>
+                </div>
+                <div class="flex justify-between items-center text-red-600">
+                    <div>
+                        <span class="font-bold uppercase text-xs tracking-wider">Leave Deductions</span>
+                        <p id="print-deduction-summary" class="text-[10px] font-black opacity-60 uppercase"></p>
+                    </div>
+                    <span id="print-l-ded" class="text-xl font-black"></span>
+                </div>
+                <div class="flex justify-between items-center text-red-600 border-b border-dashed border-slate-200 pb-6">
+                    <span class="font-bold uppercase text-xs tracking-wider">Absent Penalty</span>
+                    <span id="print-a-ded" class="text-xl font-black"></span>
+                </div>
+            </div>
+            <div class="p-6 bg-slate-50 flex justify-between items-center">
+                <span class="text-2xl font-black uppercase tracking-tighter text-slate-900">Net Payable Amount</span>
+                <span id="print-net" class="text-4xl font-black text-teal-600 tracking-tighter"></span>
+            </div>
+        </div>
+
+        <div class="mt-32 grid grid-cols-2 gap-20">
+            <div class="text-center">
+                <div class="border-t-2 border-slate-900 pt-3 font-black uppercase text-[10px] tracking-widest">Authorized Signatory</div>
+                <p class="text-[9px] text-slate-400 mt-1 italic">Seal & Signature</p>
+            </div>
+            <div class="text-center">
+                <div class="border-t-2 border-slate-900 pt-3 font-black uppercase text-[10px] tracking-widest">Employee Signature</div>
+                <p class="text-[9px] text-slate-400 mt-1 italic">Confirmation of Receipt</p>
+            </div>
+        </div>
+
+        <div class="mt-20 text-center border-t border-slate-100 pt-10">
+            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-[0.3em] mb-2">Computer Generated Document</p>
+            <p class="text-[8px] text-slate-300">This payslip is generated by the EMS System and is valid without a physical signature if verified by the office stamp.</p>
+        </div>
+    </div>
+</div>
 
                 <div id="view-set" class="hidden">
                     <div class="max-w-xl mx-auto bg-white p-6 md:p-10 rounded-[2.5rem] border shadow-sm">
