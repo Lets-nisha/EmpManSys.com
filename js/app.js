@@ -49,6 +49,7 @@ function go(v) {
   ["dash", "emp", "dept", "leave", "sal", "att", "rep", "set"].forEach((x) => {
     document.getElementById("view-" + x).classList.toggle("hidden", x !== v);
     document.getElementById("m-" + x).classList.toggle("active-link", x === v);
+    document.getElementById('sidebar').classList.add('-translate-x-full');
   });
   document.getElementById("title").innerText = v;
   if (v === "rep") drawRep();
@@ -381,4 +382,5 @@ window.onload = () => {
 function logout() {
   sessionStorage.removeItem("auth");
   location.reload();
+
 }
