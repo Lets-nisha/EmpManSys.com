@@ -1,5 +1,3 @@
-// --- Updated Code niche se copy karein ---
-
 let db = JSON.parse(localStorage.getItem("ems_db")) || {
   e: [],
   d: ["Management", "IT", "Finance"],
@@ -134,8 +132,6 @@ function saveDept() {
   }
 }
 
-// FIXED: Ab ye function pehle dikhayega (Print nahi karega seedha)
-// ... (Puraane functions waise hi rahenge) ...
 
 function printSlip(id) {
     const e = db.e.find((x) => x.id === id);
@@ -144,7 +140,6 @@ function printSlip(id) {
     const m = new Date().getMonth();
     const y = new Date().getFullYear();
 
-    // Calculation Logic
     const leaves = db.l.filter(l => l.eid === id && l.status === "approved" && new Date(l.date).getMonth() === m).length;
     const absents = db.a.filter(a => a.id === id && a.status === "absent" && new Date(a.date).getMonth() === m).length;
 
@@ -152,7 +147,6 @@ function printSlip(id) {
     const a_ded = absents * 1000;
     const net = e.salary - l_ded - a_ded;
 
-    // HTML Elements mein data bharna
     document.getElementById("print-name").innerText = e.name;
     document.getElementById("print-id").innerText = e.empID;
     document.getElementById("print-addr-display").innerText = config.addr;
@@ -163,8 +157,6 @@ function printSlip(id) {
     document.getElementById("print-net").innerText = config.cur + net.toLocaleString();
     document.getElementById("print-deduction-summary").innerText = `L: ${leaves} | A: ${absents}`;
     document.getElementById("current-date").innerText = new Date().toLocaleDateString();
-
-    // Modal Show Karna (Print Preview)
     document.getElementById("slip-print-section").classList.remove("hidden");
 
      
@@ -173,17 +165,12 @@ function printSlip(id) {
 function Print() {
   
     const printSection = document.getElementById('slip-print-section');
-    
-    // 1. Pehle section se 'hidden' class hatao
     printSection.classList.remove('hidden');
-    
-    // 2. Thoda delay do taaki browser render kar le
+
     setTimeout(() => {
         window.print();
     }, 500);
 }
-
-// ... (Baaki render aur mark functions waise hi rahenge) ...
 
 function openMark(id) {
   selId = id;
@@ -218,7 +205,7 @@ function drawRep() {
       let h = `<div class="report-card p-8">
                     <div class="flex justify-between items-center border-b pb-4 mb-6">
                         <h4 class="font-black text-slate-800 uppercase tracking-tighter">Day Log: ${date}</h4>
-                        <span class="bg-teal-50 text-teal-600 px-4 py-1 rounded-full text-[10px] font-black">${grp[date].length} Logs</span>
+                        <span class="bg-teal-50 text-teal-600 px-4 py-1 rounded-full text-[10px] font-black">${grp[date].length} EMP </span>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">`;
       grp[date].forEach((r) => {
@@ -384,3 +371,4 @@ function logout() {
   location.reload();
 
 }
+
